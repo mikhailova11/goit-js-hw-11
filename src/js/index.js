@@ -1,43 +1,58 @@
-import templateCart from '../templetes/cart.hbs';
+
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
-import API from './api-servise';
+import NewsApiService from './api-servise';
 import getRefs from "./get-refs";
-//import SimpleLightbox from "simplelightbox";
-//import "simplelightbox/dist/simple-lightbox.min.css";
+import templateCart from '../templetes/cart.hbs';
+import SimpleLightbox from "simplelightbox";
+import "simplelightbox/dist/simple-lightbox.min.css";
 import '../sass/main.scss';
 
 const refs = getRefs();
+const newsApiService = new NewsApiService();
 
-function renderCart(cart) {
-    refs.galleryEl.innerHTML = templateCart(cart);
-    //let totalHits = 
-    if (cart) {
-        Notify.info(`Hooray! We found totalHits ${totalHits} images.`);
-        return
-      }
-
-      if (cart = []) {
-        Notify.failure("Sorry, there are no images matching your search query. Please try again.")
-        return
-      }
-    
-};
 
 refs.form.addEventListener('submit', onSearch);
-
+refs.loadMoreBtn.addEventListener('click', fetchCart);
+ 
+    
+ 
 function onSearch(e) {
     e.preventDefault();
 
-    const form = e.currentTarget;
-    const searchQuery = form.elements.searchQuery.value;
-
-    API.fetchSearch(searchQuery)
-    .then(renderCart)
-    .catch(error => {
-        console.log(error);
-        Notify.failure("Sorry, there are no images matching your search query. Please try again.")})
-    .finally(()=> form.reset())
-    
+    newsApiService.searchQuery = e.currentTarget.elements.searchQuery.value;
+    refs.loadMoreBtn.classList.add('is-hidden'); 
+    newsApiService.resetPage(); 
+    clearCartContainer();
+    fetchCart();
+       
 }
+ function clearCartContainer() {
+     refs.galleryEl.innerHTML = '';
+     
+ }
+ function fetchCart() {
+     newsApiService.fetchCart()
+    .then(hits => {
+        clearCartContainer()
+        renderCart(hits);
+        refs.loadMoreBtn.classList.remove('is-hidden'); 
+    })  
+ }
+ function renderCart(hits) {
+    refs.galleryEl.insertAdjacentHTML('beforeend', templateCart(hits));
+    
+ };
 
 
+//pagination
+
+
+
+
+
+new SimpleLightbox('.gallery a', {
+    disableRightClick: true,
+     scrollZoom: false,
+     captionDelay: 250,
+     captionsData: 'alt', 
+ }); 
