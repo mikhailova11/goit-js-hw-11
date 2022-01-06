@@ -1,11 +1,9 @@
-
-import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import NewsApiService from './api-servise';
-import getRefs from "./get-refs";
 import templateCart from '../templetes/cart.hbs';
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 import '../sass/main.scss';
+import getRefs from "./get-refs";
 
 const refs = getRefs();
 const newsApiService = new NewsApiService();
@@ -25,11 +23,11 @@ refs.loadMoreBtn.addEventListener('click', fetchCart);
 function onSearch(e) {
     e.preventDefault();
 
-    newsApiService.searchQuery = e.currentTarget.elements.searchQuery.value;
-    refs.loadMoreBtn.classList.add('is-hidden'); 
+    newsApiService.searchQuery = e.currentTarget.elements.searchQuery.value; 
     newsApiService.resetPage(); 
     clearCartContainer();
-    fetchCart();  
+    fetchCart();
+    refs.loadMoreBtn.classList.add('is-hidden');  
 }
 
  function clearCartContainer() {
@@ -43,8 +41,11 @@ function onSearch(e) {
     .then(hits => {
         clearCartContainer()
         renderCart(hits);
+        if (hits.hits.length > 0) {
+            refs.loadMoreBtn.classList.remove('is-hidden'); 
+            return;
+        }
         
-        refs.loadMoreBtn.classList.remove('is-hidden'); 
     })  
  }
  function renderCart(hits) {

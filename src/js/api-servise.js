@@ -1,4 +1,8 @@
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import axios from "axios";
+import getRefs from "./get-refs";
+const refs = getRefs();
+
 export default class NewsApiService {
     constructor(){
         this.searchQuery = '';
@@ -11,10 +15,33 @@ export default class NewsApiService {
         try {
             const response = await axios.get(`${BASE_URL}?key=${API_KEY}&q=${this.searchQuery}&image_type=photo&orientation=horizontal&safesearch=true&per_page=40&page=${this.page}`);
             const hits = response.data;
+
+            refs.totalQuantityOfImages += this.page; 
+            refs.totalHits = hits.totalHits;
+
+            if (this.page === 1) {
+                Notify.success(`Hooray! We found ${refs.totalHits} images.`);   
+            }
+
+            if (refs.totalQuantityOfImages > refs.totalHits) {
+                Notify.failure("We're sorry, but you've reached the end of search results.")
+        
+                return;
+            }
+                
+            if (hits.hits.length === 0) {
+                Notify.failure('Sorry, there are no images matching your search query. Please try again.');
+                
+                return;
+            }
+            
+
             this.incrementPage();
+
+
             return hits;
         } catch (error) {
-            console.error(error);
+            console.log(error.message);
         }
 
     }
