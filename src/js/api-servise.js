@@ -4,16 +4,14 @@ export default class NewsApiService {
         this.page = 1;
     }
 
-    fetchCart() {
+    async fetchCart() {
         const API_KEY =  '24874837-d0558540b09f2ee4305703a66';
         const BASE_URL = 'https://pixabay.com/api/';
 
-        return fetch(`${BASE_URL}?key=${API_KEY}&q=${this.searchQuery}&image_type=photo&orientation=horizontal&safesearch=true&per_page=40&page=${this.page}`)
-        .then(response => response.json())
-        .then(({hits}) => {
-            this.incrementPage();
-            return hits;
-        })
+        const response = await fetch(`${BASE_URL}?key=${API_KEY}&q=${this.searchQuery}&image_type=photo&orientation=horizontal&safesearch=true&per_page=40&page=${this.page}`);
+        const hits = await response.json();
+        this.incrementPage();
+        return hits;
     }
     
     incrementPage(){

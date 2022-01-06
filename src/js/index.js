@@ -44,12 +44,6 @@ function onSearch(e) {
  };
 
 
-//pagination
-
-
-
-
-
 new SimpleLightbox('.gallery a', {
     disableRightClick: true,
      scrollZoom: false,
