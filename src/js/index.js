@@ -1,3 +1,4 @@
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import NewsApiService from './api-servise';
 import templateCart from '../templetes/cart.hbs';
 import SimpleLightbox from "simplelightbox";
@@ -41,8 +42,12 @@ function onSearch(e) {
     .then(hits => {
         clearCartContainer()
         renderCart(hits);
-        if (hits.hits.length > 0) {
+        if (hits) {
             refs.loadMoreBtn.classList.remove('is-hidden'); 
+            return;
+        };
+        if (!hits) {
+            refs.loadMoreBtn.classList.add('is-hidden'); 
             return;
         }
         

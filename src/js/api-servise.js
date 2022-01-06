@@ -16,21 +16,22 @@ export default class NewsApiService {
             const response = await axios.get(`${BASE_URL}?key=${API_KEY}&q=${this.searchQuery}&image_type=photo&orientation=horizontal&safesearch=true&per_page=40&page=${this.page}`);
             const hits = response.data;
 
-            refs.totalQuantityOfImages += this.page; 
+            refs.totalQuantityOfImages += hits.hits.length; 
             refs.totalHits = hits.totalHits;
 
-            if (this.page === 1) {
+            if (this.page === 1 & hits.total !== 0) {
                 Notify.success(`Hooray! We found ${refs.totalHits} images.`);   
             }
-
-            if (refs.totalQuantityOfImages > refs.totalHits) {
+            if (refs.totalQuantityOfImages > refs.totalHits && hits.total !==0) {
                 Notify.failure("We're sorry, but you've reached the end of search results.")
+                refs.totalQuantityOfImages = 0;
         
                 return;
             }
                 
             if (hits.hits.length === 0) {
                 Notify.failure('Sorry, there are no images matching your search query. Please try again.');
+                refs.totalQuantityOfImages = 0;
                 
                 return;
             }
