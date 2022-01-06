@@ -42,9 +42,7 @@ export default class NewsApiService {
 
             return hits;
         } catch (error) {
-                Notify.failure `${error}`;
-            }
-
+            Notify.failure `${error}`;
         }
 
     }
