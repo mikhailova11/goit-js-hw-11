@@ -9,6 +9,12 @@ import '../sass/main.scss';
 
 const refs = getRefs();
 const newsApiService = new NewsApiService();
+const lightbox = new SimpleLightbox('.gallery a', {
+    disableRightClick: true,
+     scrollZoom: false,
+     captionDelay: 250,
+     captionsData: 'alt', 
+ }); 
 
 
 refs.form.addEventListener('submit', onSearch);
@@ -24,29 +30,29 @@ function onSearch(e) {
     newsApiService.resetPage(); 
     clearCartContainer();
     fetchCart();
-       
+
+   
 }
  function clearCartContainer() {
      refs.galleryEl.innerHTML = '';
      
  }
  function fetchCart() {
+    
+    
      newsApiService.fetchCart()
     .then(hits => {
         clearCartContainer()
         renderCart(hits);
+        
         refs.loadMoreBtn.classList.remove('is-hidden'); 
     })  
  }
  function renderCart(hits) {
     refs.galleryEl.insertAdjacentHTML('beforeend', templateCart(hits));
+    lightbox.refresh();
     
  };
 
 
-new SimpleLightbox('.gallery a', {
-    disableRightClick: true,
-     scrollZoom: false,
-     captionDelay: 250,
-     captionsData: 'alt', 
- }); 
+ 

@@ -1,3 +1,4 @@
+const axios = require('axios');
 export default class NewsApiService {
     constructor(){
         this.searchQuery = '';
