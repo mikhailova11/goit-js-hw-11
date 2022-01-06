@@ -32,7 +32,7 @@ export default class NewsApiService {
             if (hits.hits.length === 0) {
                 Notify.failure('Sorry, there are no images matching your search query. Please try again.');
                 refs.totalQuantityOfImages = 0;
-                
+
                 return;
             }
             
@@ -42,7 +42,9 @@ export default class NewsApiService {
 
             return hits;
         } catch (error) {
-            console.log(error.message);
+                Notify.failure `${error}`;
+            }
+
         }
 
     }
