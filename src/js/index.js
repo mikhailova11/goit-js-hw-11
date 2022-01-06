@@ -29,10 +29,9 @@ function onSearch(e) {
     refs.loadMoreBtn.classList.add('is-hidden'); 
     newsApiService.resetPage(); 
     clearCartContainer();
-    fetchCart();
-
-   
+    fetchCart();  
 }
+
  function clearCartContainer() {
      refs.galleryEl.innerHTML = '';
      
